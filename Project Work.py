@@ -10,13 +10,63 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import math
-from random import randrange, randint
-my_dict1 = {}
-my_dict2 = {}
-my_dict3 = {}
-counter = 1
+from random import randrange, randint 
+from random import *
 
+counter = 1
+    
+    
+# The Venue Class
+class Venue:
+    count_venues=[]
+    def __init__(self, name, capacity):
+        self.name = str(name)
+        self.capacity = int(capacity)
+        Venue.count_venues.append(self.name)
+        
+    def __del__(self):
+        Venue.count_venues.remove(self)
+    
+    @staticmethod
+    def bit(self):
+        a = len(Venue.count_venues)
+        global bitstring_venue, bitstring_venue2 
+        bitstring_venue = ""
+        bitstring_venue2 = ""
+        for i in range (math.ceil(math.log(a, 2))):
+            bitstring_venue += str(randrange(0,2))
+            bitstring_venue2 += str(randrange(0,2))
+        #print(bitstring_venue, bitstring_venue2)
+        return bitstring_venue, bitstring_venue2
+
+#Available venues in faculty of engineering
+elf = Venue("ELF", 500)
+tetfund = Venue("TETfund", 250)
+necb1 = Venue("NECB 1", 200)
+necb2 = Venue("NECB 2", 200)
+necb3 = Venue("NECB 3", 200)
+gd1 = Venue("GD 1", 100)
+gd2 = Venue("GD 2", 100)
+gd3 = Venue("GD 3", 100)
+gd4 = Venue("GD 4", 100)     
+neb1 = Venue("New Engineering Block 1", 200)
+neb2 = Venue("New Engineering Block 2", 200)
+neb3 = Venue("New Engineering Block 3", 200)
+neb4 = Venue("New Engineering Block 4", 200)
+neb5 = Venue("New Engineering Block 5", 200)     
+neb6= Venue("New Engineering Block 6", 200)  
+fl3 = Venue("FL 3", 100)
+fl4 = Venue("FL 4", 100)
+ptdfhall = Venue("PTDFhall", 250)
+ptdf1 = Venue("PTDF 1", 100)
+ptdf2 = Venue("PTDF 2", 100)
+
+# Visual Interface
 class Ui_MainWindow(object):
+    my_dict1 = {}
+    my_dict2 = {}
+    my_dict3 = {}
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(705, 588)
@@ -216,12 +266,37 @@ class Ui_MainWindow(object):
 
         # To add subjects from all forms into a dictionary
         self.pushButton_2.clicked.connect(self.add_subject)
+        
+        # To create initial chromosome for subjects
+        self.pushButton_2.clicked.connect(self.bit1)
+        
+        # To create initial chromosome for number of students
+        self.pushButton_2.clicked.connect(self.bit2)
+        
+        # To create initial chromosome for credit hours
+        self.pushButton_2.clicked.connect(self.bit3)
 
         # To produce a new blank form for each class of data
         self.pushButton_2.clicked.connect(self.next_class)
 
-        # To generate results
-        self.pushButton.clicked.connect(self.generate_button)
+        # To generate the parent genome pairs
+        self.pushButton.clicked.connect(self.chromosome)
+        
+        # To carry out mutation
+        self.pushButton.clicked.connect(self.mutation)
+        
+        # To carry out crossover
+        self.pushButton.clicked.connect(self.multipoint_crossover)
+        
+        # To read the values from a genome
+        self.pushButton.clicked.connect(self.read)
+        
+        # First genome fitness score for venue size
+        self.pushButton.clicked.connect(self.fitness)
+        
+        # Second genome fitness score for venue size
+        self.pushButton.clicked.connect(self.fitness2)
+        
         
     
     def retranslateUi(self, MainWindow):
@@ -251,94 +326,425 @@ class Ui_MainWindow(object):
          global counter
          key = counter
          
-         global my_dict1, my_dict2, my_dict3
+         # global my_dict1, my_dict2, my_dict3
+         # my_dict1, my_dict2, my_dict3 = {}, {}, {}
          
-         my_dict1[key] = self.subject1.text()
-         my_dict2[key] = self.number1.text()
-         my_dict3[key] = self.hours1.text()
-         
-         counter += 1
-         key = counter
-         my_dict1[key] = self.subject2.text()
-         my_dict2[key] = self.number2.text()
-         my_dict3[key] = self.hours2.text()
+         self.my_dict1[key] = self.subject1.text()
+         self.my_dict2[key] = self.number1.text()
+         self.my_dict3[key] = self.hours1.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject3.text()
-         my_dict2[key] = self.number3.text()
-         my_dict3[key] = self.hours3.text()
+         self.my_dict1[key] = self.subject2.text()
+         self.my_dict2[key] = self.number2.text()
+         self.my_dict3[key] = self.hours2.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject4.text()
-         my_dict2[key] = self.number4.text()
-         my_dict3[key] = self.hours4.text()
+         self.my_dict1[key] = self.subject3.text()
+         self.my_dict2[key] = self.number3.text()
+         self.my_dict3[key] = self.hours3.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject5.text()
-         my_dict2[key] = self.number5.text()
-         my_dict3[key] = self.hours5.text()
+         self.my_dict1[key] = self.subject4.text()
+         self.my_dict2[key] = self.number4.text()
+         self.my_dict3[key] = self.hours4.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject6.text()
-         my_dict2[key] = self.number6.text()
-         my_dict3[key] = self.hours6.text()
+         self.my_dict1[key] = self.subject5.text()
+         self.my_dict2[key] = self.number5.text()
+         self.my_dict3[key] = self.hours5.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject7.text()
-         my_dict2[key] = self.number7.text()
-         my_dict3[key] = self.hours7.text()
+         self.my_dict1[key] = self.subject6.text()  
+         self.my_dict2[key] = self.number6.text()
+         self.my_dict3[key] = self.hours6.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject8.text()
-         my_dict2[key] = self.number8.text()
-         my_dict3[key] = self.hours8.text()
+         self.my_dict1[key] = self.subject7.text()
+         self.my_dict2[key] = self.number7.text()
+         self.my_dict3[key] = self.hours7.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject9.text()
-         my_dict2[key] = self.number9.text()
-         my_dict3[key] = self.hours9.text()
+         self.my_dict1[key] = self.subject8.text()
+         self.my_dict2[key] = self.number8.text()
+         self.my_dict3[key] = self.hours8.text()
          
          counter += 1
          key = counter
-         my_dict1[key] = self.subject10.text()
-         my_dict2[key] = self.number10.text()
-         my_dict3[key] = self.hours10.text()
+         self.my_dict1[key] = self.subject9.text()
+         self.my_dict2[key] = self.number9.text()
+         self.my_dict3[key] = self.hours9.text()
+         
+         counter += 1
+         key = counter
+         self.my_dict1[key] = self.subject10.text()
+         self.my_dict2[key] = self.number10.text()
+         self.my_dict3[key] = self.hours10.text()
          counter += 1
          
+         # Key1 list
+         dict1_key_list = list(self.my_dict1.keys())
+    
+         # Value1 list
+         dict1_value_list = list(self.my_dict1.values())
+
+         binary_list1 = []
+         #binary_dict1 = ''
+         for number in dict1_key_list:
+             binary_dict1 = bin(number) # Convert to binary
+             binary_dict1 = binary_dict1[2:]  # Remove 0b prefix
+             binary_dict1 = str(binary_dict1) # Convert to string
+             binary_dict1 = binary_dict1.zfill(9) # Pad to 9 digits
+             binary_list1.append(binary_dict1)   # Add to list
+
+         # Key2 list
+         dict2_key_list = list(self.my_dict2.keys())
+         
+         # Value2 list
+         dict2_value_list = list(self.my_dict2.values())
+
+         binary_list2 = []
+         #binary_dict2 = ''
+         for number2 in dict2_key_list:
+             binary_dict2 = bin(number2)
+             binary_dict2 = binary_dict2[2:]
+             binary_dict2 = str(binary_dict2)
+             binary_dict2 = binary_dict1.zfill(9)
+             binary_list2.append(binary_dict2)   
+                
+         # Key3 list
+         dict3_key_list = list(self.my_dict3.keys())
         
-
-#Class for the courses offered
-class subjects:
-    count = []
-
-    def __init__(self, name, number_of_students, hours):
-        self.name = name
-        self.number_of_students = int(number_of_students)
-        self.hours = int(hours)
-        subjects.count.append(self)
+         # Value3 list
+         dict3_value_list = list(self.my_dict3.values())
+         
+         binary_list3 = []
+         #binary_dict3 = ''
+         for number3 in dict3_key_list:
+             binary_dict3 = bin(number3)
+             binary_dict3 = binary_dict3[2:]
+             binary_dict3 = str(binary_dict3)
+             binary_dict3 = binary_dict3.zfill(9)
+             binary_list3.append(binary_dict3)
+        
+         return len(dict1_key_list), dict1_value_list, binary_list1
     
-    def __del__(self):
-        subjects.count.remove(self)
     
-    @staticmethod
-    def bit():
-        a = len(subjects.count)
-        global bitstring, bitstring2
-        bitstring= ''
-        bitstring2 = ''
-        for i in range (math.ceil(math.log(a, 2))):
-            bitstring += str(randrange(0,2))
-            bitstring2 += str(randrange(0,2))
-        return bitstring, bitstring2
+    # Bitstring for subjects
+    def bit1(self):
+        global my_dict1
+        length1 = len(self.my_dict1)
+        bitstring_subject = ""
+        bitstring_subject2 = ""
+        for i in range (math.ceil(math.log(length1, 2))):
+            bitstring_subject += str(randrange(0,2))
+            bitstring_subject2 += str(randrange(0,2))
+       # print (bitstring_subject)
+        return bitstring_subject, bitstring_subject2
 
 
+    # Bitstring for number of students offering subject
+    def bit2(self):
+        global my_dict2
+        length2 = len(self.my_dict2)
+        bitstring_number = ""
+        bitstring_number2 = ""
+        for i in range (math.ceil(math.log(length2, 2))):
+            bitstring_number += str(randrange(0,2))
+            bitstring_number2 += str(randrange(0,2))
+        return bitstring_number, bitstring_number2
+        
+    # Bitstring for credit hours
+    def bit3(self):
+        global my_dict3
+        length3 = len(self.my_dict3)
+        bitstring_hours = ""
+        bitstring_hours2 = ""
+        for i in range (math.ceil(math.log(length3, 2))):
+            bitstring_hours += str(randrange(0,2))
+            bitstring_hours2 += str(randrange(0,2))
+        return bitstring_hours, bitstring_hours2 
+    
+    
+    # Creates genome based on the number of required chromosome bits
+    def chromosome(self):
+        global bitstring_subject
+        global bitstring_venue
+        a = len(Venue.bit(self)[0]) + len(Ui_MainWindow.bit1(self)[0])
+        genome = ""
+        genome2 = ""
+        for i in range (a * 650):
+            genome += str(randrange(0,2))
+            genome2 += str(randrange(0,2))
+        return genome, genome2
+    
+    
+    # Mutation function
+    def mutation(self):
+        mutation_rate = 0.05
+        
+        # Iterate over each gene in the individual
+        x, y = Ui_MainWindow.chromosome(self) 
+        x_list = list(x)
+        y_list = list(y)
+        for i in range(len(x)):
+            
+            # Check if mutation should occur for this gene
+            import random
+            if random.uniform (0 , 1) < mutation_rate:
+                if x_list[i] == 0:
+                    x_list[i] = 1
+                if x_list[i] == 1:
+                    x_list[i] = 0
+                # Flip the value of the gene (0 to 1 or 1 to 0)
+                #x_list[i] = 1 - x_list[i]
+                
+            # For second genome string
+            if random.random() < mutation_rate:
+                if y_list[i] == 0:
+                    y_list[i] = 1
+                if y_list[i] == 1:
+                    y_list[i] = 0
+                # Flip the value of
+                
+                # Flip the value of the gene (0 to 1 or 1 to 0)
+               # y_list[i] = 1 - y_list[i]
+        x, y = x_list, y_list
+        return x, y
+
+        
+    def multipoint_crossover(self):
+       # if len(x) != len(other.genes):
+           # raise ValueError("Parent sequences must have the same length.")
+        gene1, gene2 = Ui_MainWindow.mutation(ui)
+        # Randomly select crossover points
+        num_crossover_points = 7
+        
+        import random
+        crossover_points = sorted(random.sample(range(1, len(gene1)), num_crossover_points))
+
+        child1, child2 = [], []
+        parent_switch = True
+
+        for i in range(len(gene1)):
+            if parent_switch:
+                child1.append(gene1[i])
+                child2.append(gene2[i])
+            else:
+                child1.append(gene2[i])
+                child2.append(gene1[i])
+
+            if i in crossover_points:
+                parent_switch = not parent_switch
+        
+        # To change the long list of genomes into a string
+        child1 = ''.join(str(num) for num in child1)
+        child2 = ''.join(str(num) for num in child2)
+        return child1, child2
+    
+    
+    # Genome reader
+    def read(self):
+        # a is genome and b is genome 2
+        a , b = ui.chromosome()
+        
+        # Venues movement
+        venue_list = Venue.count_venues
+        # Venues binary list
+        venue_binary=[]
+        for venue in venue_list:
+            venue_index = venue_list.index(venue)
+            venue_index = "{0:b}".format(venue_index)
+            venue_binary.append(venue_index)
+        # Pad binary numbers
+        pad_venue = []
+        for binary in venue_binary:
+            binary_str = str(binary)
+            padded_binary_str = binary_str.zfill(5)
+            pad_venue.append(padded_binary_str)
+            
+        # Accessing and unpacking the subject name and subject binary index
+        
+        temp, temp2, temp3 = ui.add_subject()
+        subject_name = temp2
+        binary = temp3
+        
+        # Final subjects and venues list
+        subjects = []
+        venues = []
+        
+        # To help search the genomes 14 bits at a time
+        pack_size = 0
+        for i in range (650):
+            segment = a[pack_size : pack_size + 14]
+            pack_size =  pack_size + 14
+            
+            # Reading the subjects
+            if segment[5:] in binary:
+                index = binary.index(segment[5:])
+                subjects.append(subject_name[index])
+            
+            # Reading the venues
+            if segment[:5] in pad_venue:
+                index2 = pad_venue.index(segment[:5])
+                venues.append(venue_list[index2])
+                
+        subjects2 = []
+        venues2 = []
+        
+        # To help search the genomes 14 bits at a time
+        pack_size2 = 0
+        for i in range (650):
+            segment2 = b[pack_size2 : pack_size2 + 14]
+            pack_size2 =  pack_size2 + 14
+            
+            # Reading the subjects
+            if segment2[5:] in binary:
+                index_ = binary.index(segment2[5:])
+                subjects2.append(subject_name[index_])
+            
+            # Reading the venues
+            if segment2[:5] in pad_venue:
+                index_2 = pad_venue.index(segment2[:5])
+                venues2.append(venue_list[index_2])
+        return subjects, venues, subjects2, venues2
+        
+        
+    # Returns the fitness score of each result
+    def fitness(self):
+        a, b, c, d = ui.read()
+            
+        # List of instances
+        instances = [elf, tetfund, necb1, necb2, necb3, gd1, gd2, gd3, gd4, neb1, neb2, neb3, neb4, neb5, neb6, fl3, fl4, ptdfhall, ptdf1, ptdf2]
+        
+        # Anomalies in genome based on venue capacity
+        default = 0
+        
+        # Name to find
+        capacity_list = []
+        for i in b: # Venue from the genome1
+            name_to_find = i
+            
+            # Find the instance with the matching name
+            found_instance = None
+            for instance in instances:
+                if instance.name == name_to_find:
+                    found_instance = instance
+                    break
+
+            # Check if the instance with the given name was found
+            if found_instance is not None:
+                # Access the 'cap' associated with 'Ken'
+                capacity = found_instance.capacity
+            capacity_list.append(capacity)
+            
+        capacity_list2 = []        
+        for subject in a: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            capacity_subject = int(self.my_dict2[index])
+            capacity_list2.append(capacity_subject)
+        
+        for i in range (min(len(capacity_list2), len(capacity_list))):
+            if capacity_list < capacity_list2:
+                default += 1
+        
+        return default
+        
+        
+    # For second fitness score
+    def fitness2(self):
+        a, b, c, d = ui.read()
+            
+        # List of instances
+        instances = [elf, tetfund, necb1, necb2, necb3, gd1, gd2, gd3, gd4, neb1, neb2, neb3, neb4, neb5, neb6, fl3, fl4, ptdfhall, ptdf1, ptdf2]
+        
+        default = 0
+        
+        # Name to find
+        capacity_list = []
+        for i in d: # Venue from the genome1
+            name_to_find = i
+            
+            # Find the instance with the matching name
+            found_instance = None
+            for instance in instances:
+                if instance.name == name_to_find:
+                    found_instance = instance
+                    break
+
+            # Check if the instance with the given name was found
+            if found_instance is not None:
+                # Access the 'cap' associated with 'Ken'
+                capacity = found_instance.capacity
+            capacity_list.append(capacity)
+            
+        capacity_list2 = []        
+        for subject in c: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            capacity_subject = int(self.my_dict2[index])
+            capacity_list2.append(capacity_subject)
+        
+        for i in range (min(len(capacity_list2), len(capacity_list))):
+            if capacity_list < capacity_list2:
+                default += 1
+        
+        return default
+        
+    
+    # Fitness score to check the credit hour complaince in genome1
+    def fitness_hour(self):
+        a, b, c, d = ui.read()
+        default = 0
+        
+        credit_hour_list = []        
+        for subject in a: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            credit_hour = int(self.my_dict3[index])
+            #credit_hour_list.append(capacity_subject)
+            n = 0
+            if subject in a:
+                n += 1
+            if credit_hour <= 2 and n > 1:
+                default += 1
+            if credit_hour in range(3,5) and n not in range(2,5):
+                default += 1 
+        return default
+    
+            
+    # Fitness score to check the credit hour complaince in genome2
+    def fitness_hour2(self):
+        a, b, c, d = ui.read()
+        default = 0
+        
+        credit_hour_list = []        
+        for subject in c: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            credit_hour = int(self.my_dict3[index])
+            #credit_hour_list.append(capacity_subject)
+            n = 0
+            if subject in a:
+                n += 1
+            if credit_hour <= 2 and n > 1:
+                default += 1
+            if credit_hour in range(3,5) and n not in range(2,5):
+                default += 1
+        return default        
+                
+        
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -349,3 +755,4 @@ if __name__ == "__main__":
     sys.exit(app.exec_())
 
 
+    
