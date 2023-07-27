@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import math
 from random import randrange, randint 
 from random import *
+import csv
 
 counter = 1
     
@@ -274,28 +275,28 @@ class Ui_MainWindow(object):
         self.pushButton_2.clicked.connect(self.bit2)
         
         # To create initial chromosome for credit hours
-        self.pushButton_2.clicked.connect(self.bit3)
+        #self.pushButton_2.clicked.connect(self.bit3)
 
         # To produce a new blank form for each class of data
         self.pushButton_2.clicked.connect(self.next_class)
 
         # To generate the parent genome pairs
-        self.pushButton.clicked.connect(self.chromosome)
+        #self.pushButton.clicked.connect(self.chromosome)
         
         # To carry out mutation
-        self.pushButton.clicked.connect(self.mutation)
+        #self.pushButton.clicked.connect(self.mutation)
         
         # To carry out crossover
-        self.pushButton.clicked.connect(self.multipoint_crossover)
+        #self.pushButton.clicked.connect(self.multipoint_crossover)
         
         # To read the values from a genome
-        self.pushButton.clicked.connect(self.read)
+        #self.pushButton.clicked.connect(self.read)
         
         # First genome fitness score for venue size
-        self.pushButton.clicked.connect(self.fitness)
+        #self.pushButton.clicked.connect(self.fitness)
         
         # Second genome fitness score for venue size
-        self.pushButton.clicked.connect(self.fitness2)
+        self.pushButton.clicked.connect(self.runtime)
         
         
     
@@ -315,19 +316,11 @@ class Ui_MainWindow(object):
         ui.setupUi(MainWindow)
         MainWindow.show()
 
-    # The generate button
-    def generate_button(self):
-        input_text=""
-        input_text = self.subject1.text()
-        print (input_text)
      
     # To store subject inputs
     def add_subject(self): 
          global counter
          key = counter
-         
-         # global my_dict1, my_dict2, my_dict3
-         # my_dict1, my_dict2, my_dict3 = {}, {}, {}
          
          self.my_dict1[key] = self.subject1.text()
          self.my_dict2[key] = self.number1.text()
@@ -431,18 +424,18 @@ class Ui_MainWindow(object):
              binary_dict3 = binary_dict3[2:]
              binary_dict3 = str(binary_dict3)
              binary_dict3 = binary_dict3.zfill(9)
-             binary_list3.append(binary_dict3)
-        
+             binary_list3.append(binary_dict3)   
+          
          return len(dict1_key_list), dict1_value_list, binary_list1
     
     
     # Bitstring for subjects
     def bit1(self):
-        global my_dict1
+        #global my_dict1
         length1 = len(self.my_dict1)
         bitstring_subject = ""
         bitstring_subject2 = ""
-        for i in range (math.ceil(math.log(length1, 2))):
+        for i in range (math.ceil(math.log(length1) / math.log(2))):
             bitstring_subject += str(randrange(0,2))
             bitstring_subject2 += str(randrange(0,2))
        # print (bitstring_subject)
@@ -455,7 +448,7 @@ class Ui_MainWindow(object):
         length2 = len(self.my_dict2)
         bitstring_number = ""
         bitstring_number2 = ""
-        for i in range (math.ceil(math.log(length2, 2))):
+        for i in range (math.ceil(math.log(length2) / math.log(2))):
             bitstring_number += str(randrange(0,2))
             bitstring_number2 += str(randrange(0,2))
         return bitstring_number, bitstring_number2
@@ -466,7 +459,7 @@ class Ui_MainWindow(object):
         length3 = len(self.my_dict3)
         bitstring_hours = ""
         bitstring_hours2 = ""
-        for i in range (math.ceil(math.log(length3, 2))):
+        for i in range (math.ceil(math.log(length3) / math.log(2))):
             bitstring_hours += str(randrange(0,2))
             bitstring_hours2 += str(randrange(0,2))
         return bitstring_hours, bitstring_hours2 
@@ -474,26 +467,32 @@ class Ui_MainWindow(object):
     
     # Creates genome based on the number of required chromosome bits
     def chromosome(self):
-        global bitstring_subject
-        global bitstring_venue
-        a = len(Venue.bit(self)[0]) + len(Ui_MainWindow.bit1(self)[0])
+        a,b = Venue.bit(self)
+        c,d = ui.bit1()
+        e = len(a) + len(c)
         genome = ""
         genome2 = ""
-        for i in range (a * 650):
+        
+        count = 0
+        for value in self.my_dict1.values():
+            if not value:  
+                count += 1
+                
+        for i in range (e * count):
             genome += str(randrange(0,2))
             genome2 += str(randrange(0,2))
         return genome, genome2
     
     
     # Mutation function
-    def mutation(self):
+    def mutation(self, input1, input2):
         mutation_rate = 0.05
         
         # Iterate over each gene in the individual
-        x, y = Ui_MainWindow.chromosome(self) 
-        x_list = list(x)
-        y_list = list(y)
-        for i in range(len(x)):
+        # x, y = ui.chromosome() 
+        x_list = list(input1)
+        y_list = list(input2)
+        for i in range(len(input1)):
             
             # Check if mutation should occur for this gene
             import random
@@ -511,7 +510,6 @@ class Ui_MainWindow(object):
                     y_list[i] = 1
                 if y_list[i] == 1:
                     y_list[i] = 0
-                # Flip the value of
                 
                 # Flip the value of the gene (0 to 1 or 1 to 0)
                # y_list[i] = 1 - y_list[i]
@@ -519,16 +517,15 @@ class Ui_MainWindow(object):
         return x, y
 
         
-    def multipoint_crossover(self):
-       # if len(x) != len(other.genes):
-           # raise ValueError("Parent sequences must have the same length.")
-        gene1, gene2 = Ui_MainWindow.mutation(ui)
+    def multipoint_crossover(self, gene1, gene2):
+        #gene1, gene2 = Ui_MainWindow.mutation(ui)
         # Randomly select crossover points
-        num_crossover_points = 7
-        
+        gene1 = list(gene1)
         import random
+        num_crossover_points =  math.ceil(len(gene1)/2)
+        print (len(gene1))
         crossover_points = sorted(random.sample(range(1, len(gene1)), num_crossover_points))
-
+        global child1, child2
         child1, child2 = [], []
         parent_switch = True
 
@@ -546,6 +543,8 @@ class Ui_MainWindow(object):
         # To change the long list of genomes into a string
         child1 = ''.join(str(num) for num in child1)
         child2 = ''.join(str(num) for num in child2)
+        
+        # Store the children as attributes of the class instance
         return child1, child2
     
     
@@ -613,8 +612,71 @@ class Ui_MainWindow(object):
             if segment2[:5] in pad_venue:
                 index_2 = pad_venue.index(segment2[:5])
                 venues2.append(venue_list[index_2])
-        return subjects, venues, subjects2, venues2
+    
+        return temp2, venues, temp2, venues2
         
+    
+    # Would run inside the runtime
+    def read_runtime(self, genome1, genome2):
+        # a is genome and b is genome 2
+        # a , b = ui.chromosome()
+        
+        # Venues movement
+        venue_list = Venue.count_venues
+        # Venues binary list
+        venue_binary=[]
+        for venue in venue_list:
+            venue_index = venue_list.index(venue)
+            venue_index = "{0:b}".format(venue_index)
+            venue_binary.append(venue_index)
+        # Pad binary numbers
+        pad_venue = []
+        for binary in venue_binary:
+            binary_str = str(binary)
+            padded_binary_str = binary_str.zfill(5)
+            pad_venue.append(padded_binary_str)
+            
+        # Accessing and unpacking the subject name and subject binary index
+        
+        temp, temp2, temp3 = ui.add_subject()
+        binary = temp3
+        # Final subjects and venues list
+        
+        venues = []
+        
+        # To help search the genomes 14 bits at a time
+        pack_size = 0
+        for i in range (int(len(genome1) / 14)):
+            segment = genome1[pack_size : pack_size + 14]
+            pack_size =  pack_size + 14
+            
+            
+                
+            # Reading the venues
+            if segment[:5] in pad_venue:
+                index2 = pad_venue.index(segment[:5])
+                venues.append(venue_list[index2])
+                
+            else:
+                pass
+                
+        venues2 = []
+        
+        # To help search the genomes 14 bits at a time
+        pack_size2 = 0
+        for i in range (int(len(genome1) / 14)):
+            segment2 = genome2[pack_size2 : pack_size2 + 14]
+            pack_size2 =  pack_size2 + 14
+            
+            
+            # Reading the venues
+            if segment2[:5] in pad_venue:
+                index_2 = pad_venue.index(segment2[:5])
+                venues2.append(venue_list[index_2])
+            else:
+                pass
+        
+        return temp2, venues, temp2, venues2
         
     # Returns the fitness score of each result
     def fitness(self):
@@ -641,7 +703,7 @@ class Ui_MainWindow(object):
             # Check if the instance with the given name was found
             if found_instance is not None:
                 # Access the 'cap' associated with 'Ken'
-                capacity = found_instance.capacity
+                capacity = int(found_instance.capacity)
             capacity_list.append(capacity)
             
         capacity_list2 = []        
@@ -649,16 +711,64 @@ class Ui_MainWindow(object):
             for key, val in self.my_dict1.items():
                 if val == subject:
                     index = key
-            capacity_subject = int(self.my_dict2[index])
+            capacity_subject = str(self.my_dict2[index])
             capacity_list2.append(capacity_subject)
         
         for i in range (min(len(capacity_list2), len(capacity_list))):
-            if capacity_list < capacity_list2:
-                default += 1
+           # if capacity_list[i].isdigit() and capacity_list2[i].isdigit():
+                if str(capacity_list[i]) < str(capacity_list2[i]):  
+           # print("Capacity of list 1 is less than capacity of list 2 for index", i)
+           # if capacity_list[i] < capacity_list2[i]:
+                    default += 1
         
         return default
         
+    
+    # Would run inside the runtime
+    def fitness_runtime(self, a, b, c, d):
+    
+        # List of instances
+        instances = [elf, tetfund, necb1, necb2, necb3, gd1, gd2, gd3, gd4, neb1, neb2, neb3, neb4, neb5, neb6, fl3, fl4, ptdfhall, ptdf1, ptdf2]
         
+        # Anomalies in genome based on venue capacity
+        default = 0
+        
+        # Name to find
+        capacity_list = []
+        for i in b: # Venue from the genome1
+            name_to_find = i
+            
+            # Find the instance with the matching name
+            found_instance = None
+            for instance in instances:
+                if instance.name == name_to_find:
+                    found_instance = instance
+                    break
+
+            # Check if the instance with the given name was found
+            if found_instance is not None:
+                # Access the 'cap' associated with 'Ken'
+                capacity = int(found_instance.capacity)
+            capacity_list.append(capacity)
+            
+        capacity_list2 = []        
+        for subject in a: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            capacity_subject = str(self.my_dict2[index])
+            capacity_list2.append(capacity_subject)
+        
+        for i in range (min(len(capacity_list2), len(capacity_list))):
+           # if capacity_list[i].isdigit() and capacity_list2[i].isdigit():
+                if str(capacity_list[i]) < str(capacity_list2[i]):  
+           # print("Capacity of list 1 is less than capacity of list 2 for index", i)
+           # if capacity_list[i] < capacity_list2[i]:
+                    default += 1
+        
+        return default
+    
+    
     # For second fitness score
     def fitness2(self):
         a, b, c, d = ui.read()
@@ -683,7 +793,7 @@ class Ui_MainWindow(object):
             # Check if the instance with the given name was found
             if found_instance is not None:
                 # Access the 'cap' associated with 'Ken'
-                capacity = found_instance.capacity
+                capacity = int(found_instance.capacity)
             capacity_list.append(capacity)
             
         capacity_list2 = []        
@@ -691,15 +801,60 @@ class Ui_MainWindow(object):
             for key, val in self.my_dict1.items():
                 if val == subject:
                     index = key
-            capacity_subject = int(self.my_dict2[index])
+            capacity_subject = (self.my_dict2[index])
             capacity_list2.append(capacity_subject)
         
         for i in range (min(len(capacity_list2), len(capacity_list))):
-            if capacity_list < capacity_list2:
-                default += 1
+#            if capacity_list[i].isdigit() and capacity_list2[i].isdigit():
+                if str(capacity_list[i]) < str(capacity_list2[i]): 
+            #if int(capacity_list[i]) < int(capacity_list2[i]):
+                    default += 1
         
         return default
         
+    
+    # Would run inside the runtime
+    def fitness2_runtime(self, a, b, c, d):
+
+            
+        # List of instances
+        instances = [elf, tetfund, necb1, necb2, necb3, gd1, gd2, gd3, gd4, neb1, neb2, neb3, neb4, neb5, neb6, fl3, fl4, ptdfhall, ptdf1, ptdf2]
+        
+        default = 0
+        
+        # Name to find
+        capacity_list = []
+        for i in d: # Venue from the genome1
+            name_to_find = i
+            
+            # Find the instance with the matching name
+            found_instance = None
+            for instance in instances:
+                if instance.name == name_to_find:
+                    found_instance = instance
+                    break
+
+            # Check if the instance with the given name was found
+            if found_instance is not None:
+                # Access the 'cap' associated with 'Ken'
+                capacity = int(found_instance.capacity)
+            capacity_list.append(capacity)
+            
+        capacity_list2 = []        
+        for subject in c: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            capacity_subject = (self.my_dict2[index])
+            capacity_list2.append(capacity_subject)
+        
+        for i in range (min(len(capacity_list2), len(capacity_list))):
+#            if capacity_list[i].isdigit() and capacity_list2[i].isdigit():
+                if str(capacity_list[i]) < str(capacity_list2[i]): 
+            #if int(capacity_list[i]) < int(capacity_list2[i]):
+                    default += 1
+        
+        return default
     
     # Fitness score to check the credit hour complaince in genome1
     def fitness_hour(self):
@@ -711,18 +866,43 @@ class Ui_MainWindow(object):
             for key, val in self.my_dict1.items():
                 if val == subject:
                     index = key
-            credit_hour = int(self.my_dict3[index])
+            credit_hour = str(self.my_dict3[index])
             #credit_hour_list.append(capacity_subject)
             n = 0
             if subject in a:
                 n += 1
-            if credit_hour <= 2 and n > 1:
+                n = str
+            if str(credit_hour) <= str(2) and str(n) > str(1):
                 default += 1
             if credit_hour in range(3,5) and n not in range(2,5):
                 default += 1 
         return default
     
-            
+    
+    # Would run inside the runtime
+    def fitness_hour_runtime(self, a, b, c, d):
+        
+        
+
+        default = 0
+        
+        credit_hour_list = []        
+        for subject in a: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            credit_hour = str(self.my_dict3[index])
+            #credit_hour_list.append(capacity_subject)
+            n = 0
+            if subject in a:
+                n += 1
+                n = str
+            if str(credit_hour) <= str(2) and str(n) > str(1):
+                default += 1
+            if credit_hour in range(3,5) and n not in range(2,5):
+                default += 1 
+        return default
+    
     # Fitness score to check the credit hour complaince in genome2
     def fitness_hour2(self):
         a, b, c, d = ui.read()
@@ -733,17 +913,100 @@ class Ui_MainWindow(object):
             for key, val in self.my_dict1.items():
                 if val == subject:
                     index = key
-            credit_hour = int(self.my_dict3[index])
+            credit_hour = str(self.my_dict3[index])
             #credit_hour_list.append(capacity_subject)
             n = 0
             if subject in a:
                 n += 1
-            if credit_hour <= 2 and n > 1:
+            if str(credit_hour) <= str(2) and str(n) > str(1):
                 default += 1
             if credit_hour in range(3,5) and n not in range(2,5):
                 default += 1
         return default        
+        
+    
+    # Would run inside the runtime
+    def fitness_hour2_runtime(self, a, b, c, d):
+        
+        default = 0
+        
+        credit_hour_list = []        
+        for subject in c: # Subject from genome1
+            for key, val in self.my_dict1.items():
+                if val == subject:
+                    index = key
+            credit_hour = str(self.my_dict3[index])
+            #credit_hour_list.append(capacity_subject)
+            n = 0
+            if subject in a:
+                n += 1
+            if str(credit_hour) <= str(2) and str(n) > str(1):
+                default += 1
+            if credit_hour in range(3,5) and n not in range(2,5):
+                default += 1
+        return default   
+    
+    
+    
+    # This would show thw entire flow of the task         
+    def runtime(self):
+            ui.chromosome()
+            ui.read()
+            default1 = ui.fitness()
+            default2 = ui.fitness2()
+            default3 = ui.fitness_hour()
+            default4 = ui.fitness_hour2()
+            genome1_fitness = default1 + default3
+            genome2_fitness = default2 + default4
+
+            # Add your selection logic here
+            # For example, you can choose the child with higher fitness for the next iteration
+            if genome1_fitness < genome2_fitness:
+                child1 = ui.chromosome()[0]
+                child2 = ui.chromosome()[1]
+            else:
+                child1 = ui.chromosome()[1]
+                child2 = ui.chromosome()[0]
+
+            
+            # Modify your mutation and crossover methods to accept the selected child
+            # and update the genome accordingly
+            #for generation in range(3):
+                # Mutation and crossover on the selected child
+            for i in range (50):
+                gene1, gene2 = ui.mutation(child1, child2)
+                genome1, genome2 = ui.multipoint_crossover(gene1, gene2)
+                a, b, c, d =  ui.read_runtime(genome1, genome2)
+                default1 = ui.fitness_runtime(a, b, c, d)
+                default2 = ui.fitness2_runtime(a, b, c, d)
+                default3 = ui.fitness_hour_runtime(a, b, c, d)
+                default4 = ui.fitness_hour2_runtime(a, b, c, d)
+                genome1_fitness = default1 + default3
+                genome2_fitness = default2 + default4
                 
+                if genome1_fitness > genome2_fitness:
+                    child1 = ui.multipoint_crossover(gene1, gene2)[0]
+                    child2 = ui.multipoint_crossover(gene1, gene2)[1]
+                else:
+                    child1 = ui.multipoint_crossover(gene1, gene2)[1]
+                    child2 = ui.multipoint_crossover(gene1, gene2)[0]
+            
+            solution = ui.read_runtime(genome1, genome2)
+            subj = list(filter(lambda x: x != "", (solution[0])))
+            
+            my_list = [subj, solution[1]]
+            
+            file_path = "timetable.csv"
+            with open(file_path, "w", newline="") as csvfile:
+                csv_writer = csv.writer(csvfile)
+                csv_writer.writerows(my_list)
+                
+            return subj, solution[1]
+            
+
+        
+        
+         
         
 if __name__ == "__main__":
     import sys
