@@ -44,24 +44,24 @@ class Venue:
 #Available venues in faculty of engineering
 elf = Venue("ELF", 500)
 tetfund = Venue("TETfund", 250)
-necb1 = Venue("NECB 1", 200)
-necb2 = Venue("NECB 2", 200)
-necb3 = Venue("NECB 3", 200)
-gd1 = Venue("GD 1", 100)
-gd2 = Venue("GD 2", 100)
-gd3 = Venue("GD 3", 100)
-gd4 = Venue("GD 4", 100)     
-neb1 = Venue("New Engineering Block 1", 200)
-neb2 = Venue("New Engineering Block 2", 200)
-neb3 = Venue("New Engineering Block 3", 200)
-neb4 = Venue("New Engineering Block 4", 200)
-neb5 = Venue("New Engineering Block 5", 200)     
-neb6= Venue("New Engineering Block 6", 200)  
+necb1 = Venue("NECB1", 200)
+necb2 = Venue("NECB2", 200)
+necb3 = Venue("NECB3", 200)
+gd1 = Venue("GD1", 100)
+gd2 = Venue("GD2", 100)
+gd3 = Venue("GD3", 100)
+gd4 = Venue("GD4", 100)     
+neb1 = Venue("NEB1", 200)
+neb2 = Venue("NEB2", 200)
+neb3 = Venue("NEB3", 200)
+neb4 = Venue("NEB4", 200)
+neb5 = Venue("NEB5", 200)     
+neb6= Venue("NEB6", 200)  
 fl3 = Venue("FL 3", 100)
 fl4 = Venue("FL 4", 100)
 ptdfhall = Venue("PTDFhall", 250)
-ptdf1 = Venue("PTDF 1", 100)
-ptdf2 = Venue("PTDF 2", 100)
+ptdf1 = Venue("PTDF1", 100)
+ptdf2 = Venue("PTDF2", 100)
 
 # Visual Interface
 class Ui_MainWindow(object):
@@ -305,25 +305,22 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "Generate"))
-        self.label.setText(_translate("MainWindow", "Generator X"))
-        self.label_2.setText(_translate("MainWindow", "Course Name"))
-        self.label_3.setText(_translate("MainWindow", "Number of Students"))
-        self.label_4.setText(_translate("MainWindow", "Credit Hours"))
-        self.label_5.setText(_translate("MainWindow", "Computer 100 Level"))
+        self.label.setText(_translate("MainWindow", "Genetic"))
+        self.label_2.setText(_translate("MainWindow", "Course"))
+        self.label_3.setText(_translate("MainWindow", "Student No"))
+        self.label_4.setText(_translate("MainWindow", "Hours"))
+        self.label_5.setText(_translate("MainWindow", "Computer 100L"))
         self.pushButton_2.setText(_translate("MainWindow", "Next Class"))
 
     
     # The Next Class Button
     def next_class(self):
         ui.setupUi(MainWindow)
-        classes = ['Computer 200 Level', 'Computer 300 Level', 'Computer 400 Level', 'Computer 500 Level',
-                   'Electrical 100 Level', 'Electrical 200 Level', 'Electrical 300 Level', 'Electrical 400 Level', 'Electrical 500 Level',
-                   'Chemical 100 Level', 'Chemical 200 Level', 'Chemical 300 Level', 'Chemical 400 Level', 'Chemical 500 Level',
-                   'Petroleum 100 Level', 'Petroleum 200 Level', 'Petroleum 300 Level', 'Petroleum 400 Level', 'Petroleum 500 Level',
-                   'Mechanical 100 Level', 'Mechanical 200 Level', 'Mechanical 300 Level', 'Mechanical 400 Level', 'Mechanical 500 Level',
-                   'Agric 100 Level', 'Agric 200 Level', 'Agric 300 Level', 'Agric 400 Level', 'Agric 500 Level',
-                   'Food 100 Level', 'Food 200 Level', 'Food 300 Level', 'Food 400 Level', 'Food 500 Level',
-                   'Civil 100 Level', 'Civil 200 Level', 'Civil 300 Level', 'Civil 400 Level', 'Civil 500 Level'
+        classes = ['Electrical 100L', 'Petroleum 100L', 'Chemical 100L', 'Mechanical 100L', 'Agric 100L', 'Food 100L', 'Civil 100L',
+                   "Computer 200L",'Electrical 200L', 'Petroleum 200L', 'Chemical 200L', 'Mechanical 200L', 'Agric 200L', 'Food 200L', 'Civil 200L',
+                   "Computer 300L",'Electrical 300L', 'Petroleum 300L', 'Chemical 300L', 'Mechanical 300L', 'Agric 300L', 'Food 300L', 'Civil 300L',
+                   "Computer 400L",'Electrical 400L', 'Petroleum 400L', 'Chemical 400L', 'Mechanical 400L', 'Agric 400L', 'Food 400L', 'Civil 400L',
+                   "Computer 500L",'Electrical 500L', 'Petroleum 500L', 'Chemical 500L', 'Mechanical 500L', 'Agric 500L', 'Food 500L', 'Civil 500L',
                    ]
         global i
         self.label_5.setText(classes[i])
@@ -485,6 +482,58 @@ class Ui_MainWindow(object):
          return len(key_list), input_subjects, binary_list1
     
     
+    
+    def subject_classifier(self):
+        level100=0
+        level200=0
+        level300=0
+        level400=0
+        level500=0
+        
+        # 100 Level
+        for i in range(1,81):
+            if self.my_dict3[i] != '':
+                if int(self.my_dict3[i]) > 2:
+                    level100 = level100 + 2
+                if int(self.my_dict3[i]) <= 2:
+                    level100 = level100 + 1                
+        
+        # 200 level
+        for i in range(81,161):
+            if self.my_dict3[i] != '':
+                if int(self.my_dict3[i]) > 2:
+                    level200 = level200 + 2
+                if int(self.my_dict3[i]) <= 2:
+                    level200 = level200 + 1                
+                
+        # 300 level
+        for i in range(161,241):
+            if self.my_dict3[i] != '':
+                if int(self.my_dict3[i]) > 2:
+                    level300 = level300 + 2
+                if int(self.my_dict3[i]) <= 2:
+                    level300 = level300 + 1                
+
+        # 400 level
+        for i in range(241,321):
+            if self.my_dict3[i] != '':
+                if int(self.my_dict3[i]) > 2:
+                    level400 = level400 + 2
+                if int(self.my_dict3[i]) <= 2:
+                    level400 = level400 + 1                                
+        
+        # 500 level
+        for i in range(321,401):
+            if self.my_dict3[i] != '':
+                if int(self.my_dict3[i]) > 2:
+                    level500 = level500 + 2
+                if int(self.my_dict3[i]) <= 2:
+                    level500 = level500 + 1
+                
+        return level100, level200, level300, level400, level500
+    
+    
+    
     # Bitstring for subjects
     def bit1(self):
         #global my_dict1
@@ -534,7 +583,7 @@ class Ui_MainWindow(object):
             if not value:  
                 count += 1
                 
-        for i in range (e * count):
+        for i in range (e * count * 10):
             genome += str(randrange(0,2))
             genome2 += str(randrange(0,2))
         return genome, genome2
@@ -628,7 +677,7 @@ class Ui_MainWindow(object):
         
         temp, temp2, temp3 = ui.add_subject()
         subject_name = temp2
-        random.shuffle(subject_name)
+        #random.shuffle(subject_name)
         binary = temp3
         # Final subjects and venues list
         subjects = []
@@ -674,8 +723,6 @@ class Ui_MainWindow(object):
             if segment2[:5] in pad_venue:
                 index_2 = pad_venue.index(segment2[:5])
                 venues2.append(venue_list[index_2])
-                
-        #print (subject_name, venues, subject_name, venues2)
     
         return subject_name, venues, subject_name, venues2
         
@@ -705,7 +752,7 @@ class Ui_MainWindow(object):
         temp, temp2, temp3 = ui.add_subject()
         subject_name = temp2
         binary = temp3
-        random.shuffle(subject_name)
+        #random.shuffle(subject_name)
         # Final subjects and venues list
         
         subjects = []
@@ -1076,105 +1123,128 @@ class Ui_MainWindow(object):
                     child1 = ui.multipoint_crossover(gene1, gene2)[1]
                     child2 = ui.multipoint_crossover(gene1, gene2)[0]
             
-            solution = ui.read_runtime(child1, child2)
-            subj = solution[2]
-            #my_list = [subj, solution[1]]
+            a,b,c,d = ui.read_runtime(child1, child2)
+            print(a)
+            #subj = solution[2]
+            e,f,g,h,i = ui.subject_classifier()
+            level100 = a[0: e]
+            random.shuffle(level100)
+            level200 = a[e: f]
+            random.shuffle(level200)
+            level300 = a[f: g]
+            random.shuffle(level300)
+            level400 = a[g: h]
+            random.shuffle(level400)
+            level500 = a[h: i]
+            random.shuffle(level500)
             
             # Perod slots
-            a = solution[1]
-            time = ['Year 1', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM']
-            space = []
-            my_list = [['Year 1', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM'], 
+            #a = solution[1]
+            #b = solution[3]
+            time = ['Year 1', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM']
+            space = [] 
+            star = ['********', '********', '********', '********', '********', '********']
+            my_list = [['Year 1', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM'],
+                       star,
+                       ["MON"] + level100[:5], 
+                       [''] + d[:5],
                        space,
-                       ["MONDAY"] + subj[:5], 
-                       [''] + a[:5],
+                       ["TUE"] + level100[5:10], 
+                       [''] + d[5:10],
                        space,
-                       ["TUESDAY"] + subj[5:10], 
-                       [''] + a[5:10],
+                       ["WED"] + level100[10:15],
+                       [''] + d[10:15],
                        space,
-                       ["WEDNESDAY"] + subj[10:15],
-                       [''] + a[10:15],
+                       ["THUR"] + level100[15:20],
+                       [''] + d[15:20],
                        space,
-                       ["THURSDAY"] + subj[15:20],
-                       [''] + a[15:20],
+                       ["FRI"] + level100[20:25],
+                       [''] + random.sample(d, 5),
                        space,
-                       ["FRIDAY"] + subj[20:25],
-                       [''] + random.sample(a, 5),
+                       space,
                        space,
                        space,
                        
-                       ['Year 2', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM'], 
+                       ['Year 2', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM'],
+                       star,
+                       ["MON"] + level200[:5], 
+                       [''] + b[:5],
                        space,
-                       ["MONDAY"] + subj[:5], 
-                       [''] + a[:5],
+                       ["TUE"] + level200[5:10], 
+                       [''] + b[5:10],
                        space,
-                       ["TUESDAY"] + subj[5:10], 
-                       [''] + a[5:10],
+                       ["WED"] + level200[10:15],
+                       [''] + b[10:15],
                        space,
-                       ["WEDNESDAY"] + subj[10:15],
-                       [''] + a[10:15],
+                       ["THUR"] + level200[15:20],
+                       [''] + b[15:20],
                        space,
-                       ["THURSDAY"] + subj[15:20],
-                       [''] + a[15:20],
-                       space,
-                       ["FRIDAY"] + subj[20:25],
-                       [''] + random.sample(a, 5),
+                       ["FRI"] + level200[20:25],
+                       [''] + b[20: 25],
                        space,                       
                        space,
-                       ['Year 3', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM'], 
-                       space,
-                       ["MONDAY"] + subj[:5], 
-                       [''] + a[:5],
-                       space,
-                       ["TUESDAY"] + subj[5:10], 
-                       [''] + a[5:10],
-                       space,
-                       ["WEDNESDAY"] + subj[10:15],
-                       [''] + a[10:15],
-                       space,
-                       ["THURSDAY"] + subj[15:20],
-                       [''] + a[15:20],
-                       space,
-                       ["FRIDAY"] + subj[20:25],
-                       [''] + random.sample(a, 5),
                        space,
                        space,
-                       ['Year 4', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM'], 
+                       
+                       ['Year 3', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM'],
+                       star,
+                       ["MON"] + level300[:5], 
+                       [''] + d[25:30],
                        space,
-                       ["MONDAY"] + subj[:5], 
-                       [''] + a[:5],
+                       ["TUE"] + level300[5:10], 
+                       [''] + d[30:35],
                        space,
-                       ["TUESDAY"] + subj[5:10], 
-                       [''] + a[5:10],
+                       ["WED"] + level300[10:15],
+                       [''] + d[35:40],
                        space,
-                       ["WEDNESDAY"] + subj[10:15],
-                       [''] + a[10:15],
+                       ["THUR"] + level300[15:20],
+                       [''] + d[40:45],
                        space,
-                       ["THURSDAY"] + subj[15:20],
-                       [''] + a[15:20],
-                       space,
-                       ["FRIDAY"] + subj[20:25],
-                       [''] + random.sample(a, 5),
+                       ["FRI"] + level300[20:25],
+                       [''] + random.sample(b, 5),
                        space,
                        space,
+                       space,
+                       space,
+                       
+                       ['Year 4', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM'],
+                       star,
+                       ["MON"] + level400[:5], 
+                       [''] + b[25:30],
+                       space,
+                       ["TUE"] + level400[5:10], 
+                       [''] + b[30:35],
+                       space,
+                       ["WED"] + level400[10:15],
+                       [''] + b[35:40],
+                       space,
+                       ["THUR"] + level400[15:20],
+                       [''] + b[40:45],
+                       space,
+                       ["FRI"] + level400[20:25],
+                       [''] + random.sample(b, 5),
+                       space,
+                       space,
+                       space,
+                       space,
+                       
 
-                       ['Year 5', '8AM - 10AM', '10AM - 12 NOON', '12 NOON - 2AM', '2PM - 4PM', '4PM - 6PM'], 
+                       ['Year 5', '8-10AM', '10-12PM', '12-2PM', '2-4PM', '4-6PM'],
+                       star,
+                       ["MON"] + level500[:5], 
+                       [''] + d[45:50],
                        space,
-                       ["MONDAY"] + subj[:5], 
-                       [''] + a[:5],
+                       ["TUE"] + level500[5:10], 
+                       [''] + random.sample(b, 5),
                        space,
-                       ["TUESDAY"] + subj[5:10], 
-                       [''] + a[5:10],
+                       ["WED"] + level500[10:15],
+                       [''] + random.sample(b, 5),
                        space,
-                       ["WEDNESDAY"] + subj[10:15],
-                       [''] + a[10:15],
+                       ["THUR"] + level500[15:20],
+                       [''] + random.sample(b, 5),
                        space,
-                       ["THURSDAY"] + subj[15:20],
-                       [''] + a[15:20],
-                       space,
-                       ["FRIDAY"] + subj[20:25],
-                       [''] + random.sample(a, 5)
-
+                       ["FRI"] + level500[20:25],
+                       [''] + random.sample(b, 5),
                        ]
             file_path = "timetable_genetic.csv"
             with open(file_path, "w", newline="") as csvfile:
